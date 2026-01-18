@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Quest: The 24 Challenge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="audio-control">
+        <button id="toggle-audio" onclick="AudioEngine.toggleMute()"
+            class="p-3 glass-card rounded-full hover:bg-slate-700 transition">
+            <span id="audio-icon">🎸</span>
+        </button>
+    </div>
+
+    <div id="app" class="max-w-4xl mx-auto px-4 pt-20 pb-12 min-h-screen flex flex-col">
+        <header class="text-center mb-12">
+            <h1
+                class="text-6xl font-black bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 mb-2 italic uppercase">
+                Math Quest 24</h1>
+            <p class="text-slate-400 font-medium tracking-wide italic">Taklukkan angka, temukan solusi tepat.</p>
+        </header>
+
+        <main class="flex-grow flex flex-col justify-center">
+
+            <div id="screen-home" class="grid grid-cols-1 md:grid-cols-2 gap-6 fade-in"></div>
+
+            <div id="screen-game" class="hidden flex-col items-center space-y-10 fade-in">
+                <div
+                    class="w-full flex justify-between items-center glass-card p-5 rounded-3xl border-t border-white/10">
+                    <div class="flex items-center space-x-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 font-bold border border-green-500/30">
+                            <span id="win-count">0</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] uppercase tracking-tighter text-slate-400 font-bold">Solved</span>
+                            <span class="text-sm font-bold text-slate-200">Progress: 10 Target</span>
+                        </div>
+                    </div>
+
+                    <div id="mode-display"
+                        class="px-4 py-1 bg-indigo-500/10 border border-indigo-500/30 rounded-full text-xs font-bold text-indigo-300 tracking-widest uppercase">
+                        CLASSIC MODE
+                    </div>
+
+                    <div class="flex items-center space-x-4">
+                        <div class="flex flex-col items-end">
+                            <span
+                                class="text-[10px] uppercase tracking-tighter text-slate-400 font-bold">Mistakes</span>
+                            <span class="text-sm font-bold text-slate-200">Lives: 3 Max</span>
+                        </div>
+                        <div
+                            class="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 font-bold border border-red-500/30">
+                            <span id="fail-count">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="numbers-container" class="flex flex-wrap justify-center gap-6 py-4"></div>
+
+                <div class="w-full space-y-8 glass-card p-8 rounded-[2rem]">
+                    <div class="flex flex-col items-center">
+                        <div id="binary-ops" class="flex flex-wrap justify-center gap-4"></div>
+                    </div>
+
+                    <div id="unary-section" class="flex flex-col items-center hidden border-t border-white/5 pt-6">
+                        <span class="text-[10px] font-bold text-slate-500 mb-4 uppercase tracking-[0.2em]">Unary Limit:
+                            <span id="unary-limit-display" class="text-indigo-400">0</span> Sisa</span>
+                        <div id="unary-ops" class="flex flex-wrap justify-center gap-3"></div>
+                    </div>
+
+                    <div id="power-section" class="flex flex-col items-center hidden border-t border-white/5 pt-6">
+                        <div id="power-cards" class="flex flex-wrap justify-center gap-3"></div>
+                    </div>
+
+                    <div id="history-container" class="flex flex-col items-center border-t border-white/5 pt-6 hidden">
+                        <span class="text-[10px] font-bold text-slate-500 mb-3 uppercase tracking-[0.2em]">Round
+                            History</span>
+                        <div id="history-list"
+                            class="flex flex-wrap justify-center gap-2 max-h-20 overflow-y-auto w-full px-2"></div>
+                    </div>
+                </div>
+
+                <div class="w-full flex justify-between gap-4">
+                    <button onclick="resetRound()"
+                        class="flex-1 py-4 bg-slate-800/50 hover:bg-slate-700 border border-white/5 rounded-2xl font-bold text-sm transition tracking-widest uppercase">Reset
+                        Round</button>
+                    <button onclick="showHint()"
+                        class="flex-1 py-4 bg-indigo-600/20 hover:bg-indigo-600/40 border border-indigo-500/50 rounded-2xl font-bold text-sm transition tracking-widest text-indigo-300 uppercase">Get
+                        Hint</button>
+                    <button onclick="exitToHome()"
+                        class="px-8 py-4 bg-red-900/20 hover:bg-red-900/40 border border-red-500/50 rounded-2xl font-bold text-sm transition text-red-400 tracking-widest uppercase">Exit</button>
+                </div>
+            </div>
+
+            <div id="screen-result" class="hidden text-center fade-in">
+                <div class="glass-card p-12 rounded-[3rem] inline-block max-w-md w-full border-t border-white/20">
+                    <div id="result-icon" class="text-8xl mb-8 drop-shadow-2xl">🏆</div>
+                    <h2 id="result-title" class="text-5xl font-black mb-4 uppercase">Victory!</h2>
+                    <p id="result-desc" class="text-slate-400 mb-10 leading-relaxed"></p>
+                    <button onclick="exitToHome()"
+                        class="w-full py-5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 rounded-2xl font-extrabold text-xl shadow-xl shadow-indigo-500/20 transition-all hover:scale-[1.02] uppercase">Kembali
+                        ke Menu</button>
+                </div>
+            </div>
+
+            <div id="toast"
+                class="fixed bottom-10 left-1/2 -translate-x-1/2 px-8 py-4 bg-white text-slate-900 rounded-2xl font-black shadow-2xl opacity-0 transition-all pointer-events-none z-50 uppercase tracking-widest text-xs">
+                PESAN
+            </div>
+
+        </main>
+
+        <div id="hint-modal"
+            class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm px-4">
+            <div class="glass-card p-10 rounded-[2.5rem] max-w-sm w-full border border-white/10">
+                <div
+                    class="w-16 h-16 bg-yellow-500/20 rounded-2xl flex items-center justify-center text-3xl mb-6 border border-yellow-500/30">
+                    💡</div>
+                <h3 class="text-2xl font-bold mb-4 italic">Butuh Bantuan?</h3>
+                <div id="hint-content" class="space-y-4 text-slate-300 mb-8 text-sm leading-relaxed italic"></div>
+                <button onclick="closeHint()"
+                    class="w-full py-4 bg-slate-800 hover:bg-slate-700 rounded-2xl font-bold transition uppercase">Saya
+                    Paham</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
